@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manajemen Kendaraan V1</title>
+  <meta name="description" content="Dashboard Body Repair dan Used Car">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span>🚗</span><div><b>Manajemen</b><small>Kendaraan V1</small></div></div>
+    <nav>
+      <button class="nav active" data-page="dashboard">📊 Dashboard</button>
+      <button class="nav" data-page="body">🔧 Body Repair</button>
+      <button class="nav" data-page="used">🚘 Used Car</button>
+    </nav>
+    <div class="side-note">V1 • Responsive Web</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu" id="menuBtn">☰</button>
+      <div><h1 id="pageTitle">Dashboard</h1><p>Monitoring unit kendaraan</p></div>
+      <button class="add primary" id="topAdd">＋ Tambah Unit</button>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="cards">
+        <div class="card"><span>Total Unit</span><strong id="total">0</strong></div>
+        <div class="card"><span>Body Repair</span><strong id="bodyTotal">0</strong></div>
+        <div class="card"><span>Used Car</span><strong id="usedTotal">0</strong></div>
+        <div class="card"><span>Selesai</span><strong id="doneTotal">0</strong></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Unit Terbaru</h2><p>Data tersimpan di browser untuk V1.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Jenis</th><th>Merk/Tipe</th><th>Customer</th><th>Status</th></tr></thead><tbody id="recent"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="body" class="page">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Body Repair</h2><p>Kelola unit yang sedang diperbaiki.</p></div><button class="primary add" data-kind="body">＋ Tambah</button></div>
+        <div class="toolbar"><input id="bodySearch" placeholder="Cari nomor polisi..."><select id="bodyFilter"><option value="">Semua status</option><option>Estimasi</option><option>Dalam Proses</option><option>Selesai</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Merk/Tipe</th><th>Tahun</th><th>Warna</th><th>Customer</th><th>Estimasi</th><th>Masuk</th><th>Keluar</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bodyTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="used" class="page">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Used Car</h2><p>Kelola stok dan proses unit Used Car.</p></div><button class="primary add" data-kind="used">＋ Tambah</button></div>
+        <div class="toolbar"><input id="usedSearch" placeholder="Cari nomor polisi..."><select id="usedFilter"><option value="">Semua status</option><option>Ready</option><option>Proses</option><option>Terjual</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Merk/Tipe</th><th>Tahun</th><th>Warna</th><th>Customer</th><th>Estimasi</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="usedTable"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div class="modal-head"><h2 id="modalTitle">Tambah Unit</h2><button id="close">×</button></div>
+      <form id="form">
+        <input type="hidden" id="id"><input type="hidden" id="kind">
+        <div class="grid">
+          <label>Nopol<input id="nopol" required placeholder="B 1234 XYZ"></label>
+          <label>Merk / Tipe<input id="type" required placeholder="Toyota Avanza"></label>
+          <label>Tahun<input id="year" type="number" min="1900" max="2100" required></label>
+          <label>Warna<input id="color" required placeholder="Hitam"></label>
+          <label>Customer<input id="customer" required></label>
+          <label>Tanggal Estimasi<input id="estimate" type="date" required></label>
+          <label id="masukWrap">Tanggal Masuk<input id="masuk" type="date"></label>
+          <label id="keluarWrap">Tanggal Keluar<input id="keluar" type="date"></label>
+          <label>Status<select id="status"></select></label>
+        </div>
+        <div class="form-actions"><button type="button" class="secondary" id="cancel">Batal</button><button class="primary" type="submit">Simpan</button></div>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
