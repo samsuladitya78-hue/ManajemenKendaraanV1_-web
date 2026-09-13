@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manajemen Kendaraan V1</title>
+  <meta name="description" content="Dashboard Body Repair dan Used Car">
+  <link rel="stylesheet" href="style.css">
+
+<style>
+:root{
+  --primary:#2563eb;--primary-dark:#1d4ed8;--bg:#f4f7fb;--surface:#fff;
+  --text:#172033;--muted:#718096;--line:#e8edf5;--success:#16a34a;
+  --warning:#d97706;--info:#2563eb;--danger:#dc2626;
+  --shadow:0 10px 30px rgba(20,35,65,.07);--radius:20px;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+body{min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#fff;border-right:1px solid var(--line);padding:24px 16px;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 10px 26px}
+.brand>span{width:42px;height:42px;border-radius:14px;background:#eaf1ff;display:grid;place-items:center;font-size:22px}
+.brand b{display:block;font-size:17px;letter-spacing:-.3px}.brand small{display:block;color:var(--muted);margin-top:2px}
+.sidebar nav{display:grid;gap:7px}.nav{border:0;background:transparent;color:#667085;text-align:left;padding:13px 14px;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer}
+.nav:hover{background:#f5f8ff;color:var(--primary)}.nav.active{background:#eaf1ff;color:var(--primary)}
+.side-note{position:absolute;bottom:22px;left:26px;color:#a0a9b8;font-size:12px}
+.main{margin-left:245px;padding:24px 28px 90px;max-width:1500px}
+.topbar{display:flex;align-items:center;gap:16px;margin-bottom:25px}.topbar>div{flex:1}
+.topbar h1{margin:0;font-size:27px;letter-spacing:-.7px}.topbar p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.menu{display:none;border:0;background:#fff;border-radius:12px;padding:10px 12px;font-size:20px}
+.primary{border:0;background:var(--primary);color:#fff;border-radius:12px;padding:11px 16px;font-weight:700;box-shadow:0 7px 18px rgba(37,99,235,.2);cursor:pointer}
+.primary:hover{background:var(--primary-dark)}.secondary{border:1px solid var(--line);background:#fff;color:#475467;border-radius:12px;padding:11px 16px;font-weight:600;cursor:pointer}
+.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--primary)}
+.card span{display:block;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:10px}.card strong{font-size:30px;letter-spacing:-1px}
+.card:nth-child(2):before{background:#f59e0b}.card:nth-child(3):before{background:#8b5cf6}.card:nth-child(4):before{background:#16a34a}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:21px 22px;border-bottom:1px solid var(--line)}
+.panel-head h2{margin:0;font-size:18px;letter-spacing:-.3px}.panel-head p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.toolbar{display:flex;gap:10px;padding:15px 20px;background:#fbfcfe;border-bottom:1px solid var(--line)}
+.toolbar input,.toolbar select,.grid input,.grid select{width:100%;border:1px solid #dfe5ee;background:#fff;border-radius:11px;padding:11px 12px;outline:none;font:inherit;color:var(--text)}
+.toolbar input:focus,.toolbar select:focus,.grid input:focus,.grid select:focus{border-color:#8eb2ff;box-shadow:0 0 0 3px #eaf1ff}
+.toolbar input{max-width:330px}.toolbar select{max-width:180px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid #edf1f6;font-size:13px;white-space:nowrap}
+th{background:#fbfcfe;color:#667085;font-size:11px;text-transform:uppercase;letter-spacing:.5px}tbody tr:hover{background:#f8fbff}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.show,.modal.active{display:flex}.modal-box{width:min(680px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 25px 70px rgba(0,0,0,.2)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:19px 22px;border-bottom:1px solid var(--line)}
+.modal-head h2{margin:0;font-size:19px}.modal-head button{border:0;background:#f1f4f8;width:35px;height:35px;border-radius:50%;font-size:22px;color:#667085;cursor:pointer}
+form{padding:20px 22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid label{font-size:12px;font-weight:700;color:#475467}.grid label input,.grid label select{margin-top:7px}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+@media(max-width:850px){
+  .sidebar{width:220px}.main{margin-left:220px;padding:20px}
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .sidebar{left:-260px;transition:left .2s;width:245px;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+  .sidebar.open{left:0}.main{margin-left:0;padding:14px 14px 85px}
+  .topbar{gap:10px;margin-bottom:18px}.menu{display:block}.topbar h1{font-size:22px}.topbar p{font-size:12px}
+  .topbar .add{font-size:0;padding:11px;width:43px;height:43px;border-radius:13px}.topbar .add:first-letter{font-size:20px}
+  .cards{grid-template-columns:1fr 1fr;gap:10px}.card{padding:15px;border-radius:16px}.card strong{font-size:25px}
+  .panel{border-radius:17px}.panel-head{padding:16px}.panel-head h2{font-size:16px}
+  .toolbar{padding:12px;flex-direction:column}.toolbar input,.toolbar select{max-width:none}
+  .grid{grid-template-columns:1fr}.modal{padding:10px}.modal-box{border-radius:19px}
+  .nav{padding:14px}
+  /* App-like bottom navigation */
+  .sidebar nav{position:fixed;left:0;right:0;bottom:0;height:67px;background:#fff;border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(3,1fr);padding:7px 5px;z-index:100}
+  .sidebar nav .nav{font-size:10px;text-align:center;padding:8px 3px;border-radius:11px}
+  .side-note{display:none}.brand{padding-bottom:18px}
+}
+</style>
+
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span>🚗</span><div><b>Manajemen</b><small>Kendaraan V1</small></div></div>
+    <nav>
+      <button class="nav active" data-page="dashboard">📊 Dashboard</button>
+      <button class="nav" data-page="body">🔧 Body Repair</button>
+      <button class="nav" data-page="used">🚘 Used Car</button>
+    </nav>
+    <div class="side-note">V1 • Responsive Web</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu" id="menuBtn">☰</button>
+      <div><h1 id="pageTitle">Dashboard</h1><p>Monitoring unit kendaraan</p></div>
+      <button class="add primary" id="topAdd">＋ Tambah Unit</button>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div style="margin:0 0 16px;color:#667085;font-size:13px">Ringkasan aktivitas kendaraan hari ini</div>
+      <div class="cards">
+        <div class="card"><span>Total Unit</span><strong id="total">0</strong></div>
+        <div class="card"><span>Body Repair</span><strong id="bodyTotal">0</strong></div>
+        <div class="card"><span>Used Car</span><strong id="usedTotal">0</strong></div>
+        <div class="card"><span>Selesai</span><strong id="doneTotal">0</strong></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Unit Terbaru</h2><p>Data tersimpan di browser untuk V1.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Jenis</th><th>Merk/Tipe</th><th>Customer</th><th>Status</th></tr></thead><tbody id="recent"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="body" class="page">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Body Repair</h2><p>Kelola unit yang sedang diperbaiki.</p></div><button class="primary add" data-kind="body">＋ Tambah</button></div>
+        <div class="toolbar"><input id="bodySearch" placeholder="Cari nomor polisi..."><select id="bodyFilter"><option value="">Semua status</option><option>Estimasi</option><option>Dalam Proses</option><option>Selesai</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Merk/Tipe</th><th>Tahun</th><th>Warna</th><th>Customer</th><th>Estimasi</th><th>Masuk</th><th>Keluar</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bodyTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="used" class="page">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Used Car</h2><p>Kelola stok dan proses unit Used Car.</p></div><button class="primary add" data-kind="used">＋ Tambah</button></div>
+        <div class="toolbar"><input id="usedSearch" placeholder="Cari nomor polisi..."><select id="usedFilter"><option value="">Semua status</option><option>Ready</option><option>Proses</option><option>Terjual</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>Nopol</th><th>Merk/Tipe</th><th>Tahun</th><th>Warna</th><th>Customer</th><th>Estimasi</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="usedTable"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div class="modal-head"><h2 id="modalTitle">Tambah Unit</h2><button id="close">×</button></div>
+      <form id="form">
+        <input type="hidden" id="id"><input type="hidden" id="kind">
+        <div class="grid">
+          <label>Nopol<input id="nopol" required placeholder="B 1234 XYZ"></label>
+          <label>Merk / Tipe<input id="type" required placeholder="Toyota Avanza"></label>
+          <label>Tahun<input id="year" type="number" min="1900" max="2100" required></label>
+          <label>Warna<input id="color" required placeholder="Hitam"></label>
+          <label>Customer<input id="customer" required></label>
+          <label>Tanggal Estimasi<input id="estimate" type="date" required></label>
+          <label id="masukWrap">Tanggal Masuk<input id="masuk" type="date"></label>
+          <label id="keluarWrap">Tanggal Keluar<input id="keluar" type="date"></label>
+          <label>Status<select id="status"></select></label>
+        </div>
+        <div class="form-actions"><button type="button" class="secondary" id="cancel">Batal</button><button class="primary" type="submit">Simpan</button></div>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
